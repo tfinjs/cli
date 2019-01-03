@@ -8,6 +8,7 @@ import {
   versionedName,
 } from '@tfinjs/api';
 import awsProviderUri from '@tfinjs/api/uris/aws';
+import { resolve } from 'path';
 
 const backendBucketName = 'some-backend-bucket';
 const backendBucketRegion = 'eu-central-1';
@@ -44,7 +45,7 @@ const backend = new Backend('s3', {
     }),
 });
 
-const project = new Project('pet-shop', backend);
+const project = new Project('pet-shop', backend, resolve(__dirname, '../build.test.out'));
 
 const namespace = new Namespace(project, 'customers');
 

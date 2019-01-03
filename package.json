@@ -1,6 +1,6 @@
 {
-  "name": "tfinjs-cli",
-  "version": "0.0.5",
+  "name": "@tfinjs/cli",
+  "version": "0.0.1-beta",
   "description": "",
   "main": "./dist/index.js",
   "scripts": {
@@ -17,15 +17,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ricsam/tfinjs-cli.git"
+    "url": "git+https://github.com/tfinjs/cli.git"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ricsam/tfinjs-cli/issues"
+    "url": "https://github.com/tfinjs/cli/issues"
   },
-  "homepage": "https://pedantic-sammet-e08804.netlify.com/",
+  "homepage": "https://tfinjs.com",
   "dependencies": {
     "commander": "^2.19.0",
     "fs-extra": "^7.0.1",
@@ -41,7 +41,7 @@
     "@babel/core": "^7.1.6",
     "@babel/plugin-proposal-class-properties": "^7.2.1",
     "@babel/preset-env": "^7.2.0",
-    "@tfinjs/api": "^0.0.4-beta",
+    "@tfinjs/api": "^0.0.6-beta",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^23.6.0",

@@ -9,12 +9,11 @@ import {
   readFileSync,
 } from 'fs-extra';
 
-const build = async (project, { output }) => {
+const build = async (project) => {
   assert(
     project instanceof Project,
     'project must be an instance of Project',
   );
-  assert(typeof output === 'string', 'output must be string');
   const resources = project.getResources();
   const newHistory = resources.reduce((map, resource) => {
     const uri = resource.getUri();
@@ -25,9 +24,7 @@ const build = async (project, { output }) => {
     };
   }, {});
 
-  mkdirpSync(output);
-
-  const historyFilePath = resolve(output, 'history.json');
+  const historyFilePath = resolve(project.getDist(), 'history.json');
 
   let currentHistory = {};
   try {
@@ -50,16 +47,7 @@ const build = async (project, { output }) => {
 
   await Promise.all(
     resources.map(async (resource) => {
-      const name = resource.versionedName();
-
-      const distFolder = resolve(output, name);
-      ensureDirSync(distFolder);
-
-      const hcl = resource.getHcl();
-
-      const prettyHcl = await hclPrettify(hcl);
-
-      writeFileSync(resolve(distFolder, 'main.tf'), prettyHcl);
+      await resource.build();
     }),
   );
 };

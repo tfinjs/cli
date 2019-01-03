@@ -551,11 +551,13 @@
   dependencies:
     defer-to-connect "^1.0.1"
 
-"@tfinjs/api@^0.0.4-beta":
-  version "0.0.4-beta"
-  resolved "https://registry.yarnpkg.com/@tfinjs/api/-/api-0.0.4-beta.tgz#99148854fedde8d598d413182be013d02f0b9964"
+"@tfinjs/api@^0.0.6-beta":
+  version "0.0.6-beta"
+  resolved "https://registry.yarnpkg.com/@tfinjs/api/-/api-0.0.6-beta.tgz#cc03c0d13504f335083e2931329a011354e77233"
   dependencies:
     "@babel/plugin-transform-instanceof" "^7.2.0"
+    lodash "^4.17.11"
+    mkdirp "^0.5.1"
 
 "@webassemblyjs/ast@1.7.11":
   version "1.7.11"
