@@ -63,7 +63,8 @@ const staticConfig = new DeploymentConfig(namespace, {
     awsProviderUri(awsAccoundId, 'eu-north-1'),
   ),
 });
-const table = new Resource(staticConfig, 'aws_dynamodb_table', 'customers', {
+
+export const table = new Resource(staticConfig, 'aws_dynamodb_table', 'customers', {
   name: versionedName(),
   read_capacity: 20,
   write_capacity: 20,

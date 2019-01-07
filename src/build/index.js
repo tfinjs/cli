@@ -1,55 +1,31 @@
+import defaultFsModule from 'fs';
 import assert from 'assert';
-import { resolve } from 'path';
+import mkdirp from 'mkdirp';
 import { Project } from '@tfinjs/api';
-import { hclPrettify } from '@tfinjs/api/utils';
-import {
-  mkdirpSync,
-  ensureDirSync,
-  writeFileSync,
-  readFileSync,
-} from 'fs-extra';
+import createHistory from './createHistory';
 
-const build = async (project) => {
-  assert(
-    project instanceof Project,
-    'project must be an instance of Project',
-  );
+const build = async (project, { outputFolderPath, fs = defaultFsModule }) => {
+  assert(project instanceof Project, 'project must be an instance of Project');
+
+  project.setFs(fs);
+
+  project.setDist(outputFolderPath);
+
+  mkdirp.sync(outputFolderPath, {
+    fs,
+  });
+
+  /* build */
   const resources = project.getResources();
-  const newHistory = resources.reduce((map, resource) => {
-    const uri = resource.getUri();
-    const name = resource.versionedName();
-    return {
-      ...map,
-      [name]: uri,
-    };
-  }, {});
-
-  const historyFilePath = resolve(project.getDist(), 'history.json');
-
-  let currentHistory = {};
-  try {
-    currentHistory = JSON.parse(readFileSync(historyFilePath));
-  } catch (err) {
-    /* do nothing */
-  }
-
-  writeFileSync(
-    historyFilePath,
-    JSON.stringify(
-      {
-        ...currentHistory,
-        ...newHistory,
-      },
-      null,
-      2,
-    ),
-  );
 
   await Promise.all(
     resources.map(async (resource) => {
       await resource.build();
     }),
   );
+
+  /* create the history.json file */
+  return createHistory(project, fs);
 };
 
 export default build;

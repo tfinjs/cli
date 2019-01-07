@@ -7,7 +7,7 @@ import webpack from 'webpack';
 import nodeExternals from 'webpack-node-externals';
 import MemoryFS from 'memory-fs';
 import pgk from '../../package.json';
-import build from '../build/index';
+import build from '../build';
 // import { readFileSync } from 'fs';
 
 const fs = new MemoryFS();
@@ -37,7 +37,7 @@ commander
     'Transpiles the javascript files into a single file exporting a deployment instance',
   )
   .option('-o --output <outputFolder>', 'output path', parseCliInputPath)
-  .action((entry, { output = requiredParam('output') }) => {
+  .action((entry, { output: outputFolderPath = requiredParam('output') }) => {
     const entryFile = parseCliInputPath(entry);
     const compiler = webpack({
       entry: entryFile,
@@ -54,7 +54,7 @@ commander
       mode: 'production',
     });
     compiler.outputFileSystem = fs;
-    compiler.run((err, stats) => {
+    compiler.run(async (err, stats) => {
       // Read the output later:
 
       if (err) {
@@ -83,12 +83,41 @@ commander
 
       const content = fs.readFileSync('/index.js');
       const contentWithSourceMapSupport = `require('source-map-support').install();\n${content}`;
-      const deployment = requireFromString(
-        contentWithSourceMapSupport,
-        entryFile,
+      const project = requireFromString(contentWithSourceMapSupport, entryFile);
+      const historyDiff = await build(project, { outputFolderPath });
+      const dependencyGraph = project.getDependencyGraph();
+      console.log(
+        'Dependency graph:',
+        JSON.stringify(dependencyGraph, null, 2),
       );
-      build(deployment, { output });
-      // console.log(deployment.getResources()[0].getUri());
+      console.log('\n');
+      if (dependencyGraph.circular.length) {
+        console.log(
+          'Warning! You have circular dependencies which cannot be instantaneously deployed, see the dependency graph log above',
+        );
+      }
+      const createDeployCommand = (hash) =>
+        `cd ${resolve(outputFolderPath, hash)} && tf init && tf apply`;
+
+      const createDestroyCommand = (hash) =>
+        `cd ${resolve(outputFolderPath, hash)} && tf init && tf destroy`;
+
+      const deployCommand = dependencyGraph.tree
+        .map((uri) =>
+          createDeployCommand(project.getResourceFromUri(uri).versionedName()))
+        .join('\n');
+      console.log('To deploy everything in CI run:');
+      console.log(deployCommand);
+
+      const devDeployCommand = [
+        ...[...historyDiff.add, ...historyDiff.update].map(createDeployCommand),
+        ...historyDiff.remove.map(createDestroyCommand),
+      ].join('\n');
+
+      if (devDeployCommand.length > 2) {
+        console.log('To deploy in dev run:');
+        console.log(devDeployCommand);
+      }
     });
   });
 

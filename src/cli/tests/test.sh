@@ -1,1 +1,1 @@
-yarn run build && yarn run start build ./src/build/tests/build.test.in/index.js -o ./src/cli/tests/cli.test.out
+yarn run build && yarn run start build ./src/build/tests/sampleProject.js -o ./src/cli/tests/dist

@@ -1,7 +1,11 @@
 const fs = require('fs');
 const path = require('path');
+const webpackConfig = require('./webpack.config');
 
-const fpath = path.join(__dirname, 'dist/tfinjs.js');
+const fpath = path.resolve(
+  webpackConfig.output.path,
+  webpackConfig.output.filename,
+);
 
 const content = fs.readFileSync(fpath);
 fs.writeFileSync(
