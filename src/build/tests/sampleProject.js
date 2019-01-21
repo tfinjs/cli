@@ -45,9 +45,9 @@ const backend = new Backend('s3', {
     }),
 });
 
-const project = new Project('pet-shop', backend, resolve(__dirname, '../build.test.out'));
+const sampleProject = new Project('pet-shop', backend, resolve(__dirname, '../build.test.out'));
 
-const namespace = new Namespace(project, 'customers');
+const namespace = new Namespace(sampleProject, 'customers');
 
 const staticConfig = new DeploymentConfig(namespace, {
   environment: 'prod',
@@ -71,4 +71,4 @@ export const table = new Resource(staticConfig, 'aws_dynamodb_table', 'customers
   hash_key: 'CustomerId',
 });
 
-export default project;
+export default sampleProject;

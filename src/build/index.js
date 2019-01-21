@@ -1,8 +1,9 @@
-import defaultFsModule from 'fs';
-import assert from 'assert';
-import mkdirp from 'mkdirp';
 import { Project } from '@tfinjs/api';
-import createHistory from './createHistory';
+import assert from 'assert';
+import defaultFsModule from 'fs';
+import mkdirp from 'mkdirp';
+import { join } from 'path';
+import getDeploymentSchema from '../getDeploymentSchema';
 
 const build = async (project, { outputFolderPath, fs = defaultFsModule }) => {
   assert(project instanceof Project, 'project must be an instance of Project');
@@ -18,14 +19,18 @@ const build = async (project, { outputFolderPath, fs = defaultFsModule }) => {
   /* build */
   const resources = project.getResources();
 
+  const latestDeploy = getDeploymentSchema(project, fs);
+
+  fs.writeFileSync(
+    join(outputFolderPath, 'latest_deploy.json'),
+    JSON.stringify(latestDeploy, null, 2),
+  );
+
   await Promise.all(
     resources.map(async (resource) => {
       await resource.build();
     }),
   );
-
-  /* create the history.json file */
-  return createHistory(project, fs);
 };
 
 export default build;
