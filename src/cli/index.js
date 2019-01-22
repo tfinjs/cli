@@ -88,7 +88,7 @@ commander
       const project = requireFromString(contentWithSourceMapSupport, entryFile);
       await build(project, { outputFolderPath });
       const schema = getDeploymentSchema(project, fs);
-      console.log(prettyPrint(schema));
+      console.log(prettyPrint(schema, outputFolderPath));
     });
   });
 

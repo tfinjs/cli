@@ -1,4 +1,5 @@
 import figures from 'figures';
+import { join } from 'path';
 import chalk from 'chalk';
 import {
   getCyclic,
@@ -9,7 +10,8 @@ import {
 
 const prettyPrint = ({
   add, graph, remove, update,
-}) => {
+}, dist) => {
+  const getDir = (d) => join(dist, d);
   let output = '';
   const cyclic = getCyclic(graph);
   if (cyclic.stacks.length > 0) {
@@ -27,11 +29,11 @@ const prettyPrint = ({
     ${dependencies
     .map(
       (nodes, index) =>
-        `\n${chalk.underline(`# level ${index}:`)}\n${nodes
+        `\n${chalk(`# level ${index}:`)}\n${nodes
           .map((node) =>
             chalk.bgBlack.green(
-              `\ncd ${chalk.underline.bold(
-                node,
+              `\ncd ${chalk.bold(
+                getDir(node),
               )} && tf init && tf apply -auto-approve`,
             ))
           .join(' &&\n')}`,
@@ -44,8 +46,8 @@ const prettyPrint = ({
     remove
       .map(
         (node) =>
-          `\ncd ${chalk.underline.bold(
-            node,
+          `\ncd ${chalk.bold(
+            getDir(node),
           )} && tf init && tf destroy -auto-approve`,
       )
       .join(' &&\n'),
