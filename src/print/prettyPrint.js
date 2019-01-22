@@ -25,17 +25,17 @@ const prettyPrint = ({
   const dependencies = getNonCyclic(graph);
   output += `\n\n${chalk.green.bold('Run the following to deploy')}
     ${dependencies
-    .map((nodes) =>
-      chalk.bgBlack.green(
-        nodes
-          .map(
-            (node) =>
+    .map(
+      (nodes, index) =>
+        `\n${chalk.underline(`# level ${index}:`)}\n${nodes
+          .map((node) =>
+            chalk.bgBlack.green(
               `\ncd ${chalk.underline.bold(
                 node,
               )} && tf init && tf apply -auto-approve`,
-          )
-          .join(' &&\n'),
-      ))
+            ))
+          .join(' &&\n')}`,
+    )
     .join('\n\n')}
   `;
   if (remove.length) {

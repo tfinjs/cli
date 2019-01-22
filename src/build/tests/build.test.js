@@ -1,6 +1,6 @@
 /* eslint-env jest */
 import MemoryFileSystem from 'memory-fs';
-import project, { table } from './sampleProject';
+import project, { table } from '../../../mocks/sampleProject';
 import build from '../index';
 import getDeploymentSchema from '../../getDeploymentSchema';
 

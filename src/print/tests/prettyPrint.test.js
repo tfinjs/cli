@@ -38,3 +38,21 @@ test('prettyPrint remove', () => {
   // expect(output).toBe(remove);
   snapshot(getName('remove'), output);
 });
+
+test('prettyPrint normal with graph', () => {
+  const output = prettyPrint({
+    add: ['a', 'b', 'c', 'd'],
+    graph: {
+      a: ['b'],
+      b: ['c', 'd'],
+      c: [],
+      d: [],
+      e: [],
+    },
+    remove: [],
+    update: [],
+  });
+  // console.log(JSON.stringify(output));
+  // expect(output).toBe(normal);
+  snapshot(getName('normal-graph'), output);
+});

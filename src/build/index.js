@@ -19,11 +19,11 @@ const build = async (project, { outputFolderPath, fs = defaultFsModule }) => {
   /* build */
   const resources = project.getResources();
 
-  const latestDeploy = getDeploymentSchema(project, fs);
+  const schema = getDeploymentSchema(project, fs);
 
   fs.writeFileSync(
     join(outputFolderPath, 'latest_deploy.json'),
-    JSON.stringify(latestDeploy, null, 2),
+    JSON.stringify(schema, null, 2),
   );
 
   await Promise.all(
