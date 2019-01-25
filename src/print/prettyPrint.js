@@ -24,6 +24,8 @@ const prettyPrint = ({
     `;
   }
 
+  console.log(add, update);
+
   const dependencies = getNonCyclic(graph);
   output += `\n\n${chalk.green.bold('Run the following to deploy')}
     ${dependencies
