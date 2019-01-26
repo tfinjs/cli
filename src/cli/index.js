@@ -6,13 +6,15 @@ import { resolve, isAbsolute } from 'path';
 import webpack from 'webpack';
 import nodeExternals from 'webpack-node-externals';
 import MemoryFS from 'memory-fs';
-import pgk from '../../package.json';
+import { version } from '../../package.json';
 import build from '../build';
 import getDeploymentSchema from '../getDeploymentSchema';
-import prettyPrint from '../print/prettyPrint.js';
+import prettyPrint from '../print/prettyPrint';
 // import { readFileSync } from 'fs';
 
 const fs = new MemoryFS();
+
+console.log(123);
 
 const requireFromString = (src, filename) => {
   /* eslint-disable no-underscore-dangle */
@@ -31,7 +33,7 @@ const parseCliInputPath = (rawDir) => {
   return dir;
 };
 
-commander.version(pgk.version);
+commander.version(version);
 
 commander
   .command('build <entryFile>')

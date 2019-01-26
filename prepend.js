@@ -1,11 +1,7 @@
 const fs = require('fs');
 const path = require('path');
-const webpackConfig = require('./webpack.config');
 
-const fpath = path.resolve(
-  webpackConfig.output.path,
-  webpackConfig.output.filename,
-);
+const fpath = path.resolve(__dirname, 'dist/index.js');
 
 const content = fs.readFileSync(fpath);
 fs.writeFileSync(
